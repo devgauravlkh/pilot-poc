@@ -1,0 +1,61 @@
+{
+  "name": "poc-ai",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/poc-ai/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/poc-ai",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/poc-ai/src/main.ts",
+        "tsConfig": "apps/poc-ai/tsconfig.app.json",
+        "assets": ["apps/poc-ai/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "generateLockfile": true,
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "poc-ai:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "poc-ai:build:development"
+        },
+        "production": {
+          "buildTarget": "poc-ai:build:production"
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/poc-ai/Dockerfile . -t poc-ai"
+    }
+  },
+  "tags": []
+}
