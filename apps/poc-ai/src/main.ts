@@ -52,6 +52,10 @@ async function generateFinPlanNote(client) {
       {
         role: "user",
         content: "Note output should be valid HTML only.",
+      },
+      {
+        role: "user",
+        content: "Note I need information presented in a clean HTML format suitable for direct use in web content. Please do not include any markdown or code block characters such as ``` around the HTML content. The information should be structured with proper HTML tags, including doctype, html, head, and body sections. It should be ready to be inserted into a webpage as is.",
       }
     ],
     model: "gpt-3.5-turbo-0125"
