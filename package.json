@@ -2,7 +2,12 @@
   "name": "@poc-ai/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start:frontend": "npx nx run frontend:serve --configuration=development",
+    "start:backend": "npx nx run poc-ai:serve --configuration=development",
+    "build:frontend": "npx nx run frontend:build",
+    "build:backend": "npx nx run poc-ai:build --configuration=production"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~17.1.0",
