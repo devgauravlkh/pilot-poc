@@ -1,12 +1,11 @@
 import express from 'express';
 import OpenAI from "openai";
-import { environment } from './env';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
-const openai = new OpenAI({ apiKey: environment.OpenAiAPIKey });
+const openai = new OpenAI({ apiKey: process.env.OpenAiAPIKey });
 
 app.get('/', (req, res) => {
   res.send({ message: 'Server Running' });
