@@ -5,6 +5,7 @@ const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
+console.log(" => process.env.OpenAiAPIKey: ", process.env.OpenAiAPIKey);
 const openai = new OpenAI({ apiKey: process.env.OpenAiAPIKey });
 
 app.get('/', (req, res) => {
