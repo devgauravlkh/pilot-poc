@@ -1,0 +1,43 @@
+<div style="padding: 20px">
+    <div *ngIf="data.value === 'occupation'">
+        <form [formGroup]="occupationForm" (ngSubmit)="closePopup()">
+            <h2 style="margin: 0 0 15px 0px; text-align: center">Other Occupation</h2>
+            <div class="popup">
+                <mat-form-field appearance="outline" style="width: 80%;">
+                  <input matInput type="text" formControlName="occupationInput" placeholder="Add Your Own Profession"
+                      (change)="changeInput($event.target)"/>
+                      <mat-error *ngIf="occupationForm?.invalid && (occupationForm?.dirty || occupationForm?.touched)">Occupation is required.</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="data.value === 'parents'">
+        <form [formGroup]="parentForm" (ngSubmit)="closePopup()">
+            <h2 style="margin: 0 0 15px 0px; text-align: center">{{data.name}}</h2>
+            <div class="popup">
+                <mat-form-field appearance="outline" style="width: 80%;">
+                  <input matInput formControlName="parentInput" type="text" placeholder="Enter No. of Parents" (change)="changeInput($event.target)"/>
+                  <mat-error *ngIf="(parentsInput?.dirty || parentsInput?.touched) || parentsInput?.errors?.['required']">No. of Parents are required.</mat-error>
+                  <mat-error *ngIf="parentsInput?.errors?.['pattern'] || parentsInput?.errors?.['min'] || parentsInput?.errors?.['max']">Enter a valid number between 0 and 100.</mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="data.value === 'children'">
+      <form [formGroup]="childrenForm" (ngSubmit)="closePopup()">
+          <h2 style="margin: 0 0 15px 0px; text-align: center">{{data.name}}</h2>
+          <div class="popup">
+              <mat-form-field appearance="outline" style="width: 80%;">
+                <input matInput formControlName="childrenInput" type="text" placeholder="Enter No. of Children" (change)="changeInput($event.target)"/>
+                <mat-error *ngIf="(childrenInput?.dirty || childrenInput?.touched) ||childrenInput?.errors?.['required']">No. of Children is required.</mat-error>
+                <mat-error *ngIf="childrenInput?.errors?.['pattern'] || childrenInput?.errors?.['min'] || childrenInput?.errors?.['max']">Enter a valid number between 0 and 100.</mat-error>
+              </mat-form-field>
+          </div>
+      </form>
+  </div>
+    <div style="display: flex; justify-content: center">
+      <button type="submit" mat-raised-button color="primary" (click)="closePopup()">
+        Add
+      </button>
+    </div>
+</div>

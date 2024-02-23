@@ -8,6 +8,21 @@ const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 const app = express();
 const openai = new OpenAI({ apiKey: environment.OpenAiAPIKey });
 
+// Parse JSON bodies
+app.use(express.json());
+
+// CORS middleware
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 app.get('/', (req, res) => {
   res.send({ message: 'Server Running' });
 });
@@ -16,7 +31,7 @@ app.listen(port, host, () => {
   console.log(`[ ready ] http://${host}:${port}`);
 });
 
-app.get('/result', (req, res) => {
+app.post('/result', (req, res) => {
   const clientDetails = req?.body;
   // const clientDetails = {
   //   occupation    : "farmer/rancher",
@@ -36,12 +51,18 @@ app.get('/result', (req, res) => {
 });
 
 async function generateFinPlanNote(client) {
-  const content = `You are a financial planner preparing to meet with a prospective client. The client you are meeting with is a ${client.occupation}, ${client.lifestage}, ${client.maritalStatus} individual with ${client.children} and ${client.parents}, and has ${client.savings}. Your task is to generate a note outlining the client's main concerns, questions to ask during the meeting, and documents to request from the client to bring with them. The concerns, questions, and documents should be tailored to the client's specific profile.
-  Please generate:
-  1. **Concerns**:
-  2. **Questions**:
-  3. **Documents to Bring**:
-  `;
+  const occupation = client.facts.find((fact: any) => fact.name === 'Occupation')?.value;
+  const lifestage = client.facts.find((fact: any) => fact.name === 'Life Stage')?.value;
+  const maritalStatus = client.facts.find((fact: any) => fact.name === 'Marital Status')?.value;
+  const children = client.facts.find((fact: any) => fact.name === 'Children')?.value;
+  const parents = client.facts.find((fact: any) => fact.name === 'Parents')?.value;
+  const savings = client.facts.find((fact: any) => fact.name === 'Savings')?.value;
+  const content = `You are a financial planner preparing to meet with a prospective client. The client you are meeting with is a ${occupation}, ${lifestage}, ${maritalStatus} individual with ${children} and ${parents}, and has ${savings}. Your task is to generate a note outlining the client's main concerns, questions to ask during the meeting, and documents to request from the client to bring with them. The concerns, questions, and documents should be tailored to the client's specific profile.
+    Please generate:
+    1. **Concerns**:
+    2. **Questions**:
+    3. **Documents to Bring**:
+    `;
   const completion = await openai.chat.completions.create({
     messages: [
       {

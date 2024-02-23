@@ -1,0 +1,6 @@
+.popup{
+    display: flex;
+    justify-content: space-around;
+    align-items: baseline;
+    margin: 18px 0;
+}

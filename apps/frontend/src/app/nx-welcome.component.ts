@@ -1,10 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'poc-ai-nx-welcome',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   template: `
     <!--
      * * * * * * * * * * * * * * * * * * * * * * * * * * * *

@@ -1,0 +1,110 @@
+.ai-prompt{
+    text-align: center; 
+    margin:50px
+}
+.text-area{
+    width: 90%;
+    height: 90px;
+    padding: 10px;
+    font-family: auto;
+    font-size: 16px;
+}
+
+label{
+    width: 60%;
+}
+
+.cdk-overlay-container{
+    display: flex;
+}
+
+.cdk-global-overlay-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.center-dialog .mat-dialog-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .error-message{
+    color: red;
+    font-size: 12px;
+    position: absolute;
+    top: 21px;
+    left: 0px;
+  }
+
+  .errors{
+    color: red;
+    font-size: 12px;
+    text-align: left;
+    position: absolute;
+    left: 7%;
+  }
+
+  .submit{
+    padding: 15px;
+  }
+
+  .select-occupation{
+    border: 1px solid #767676;
+    border-radius: 3px;
+    padding: 1px;
+    width: 87%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 18px;
+  }
+
+  .occupation-dropdown{
+    position: absolute;
+    top: 38px;
+    width: 90%;
+    border: 1px solid #767676; 
+    border-radius: 3px;
+  }
+
+  .truncate-text{
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .occupation-options{
+    padding: 5px; 
+    border: 1px solid #767676; 
+    border-radius: 3px;
+  }
+
+  .down-icon{
+    position: absolute;
+    right: -10px;
+    top: 15px;
+    color: grey;
+  }
+
+  .selected-occupation{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    width: 89%;
+    border: 1px solid #767676;
+    border-radius: 2px;
+    height: 21px;
+  }
+
+  .submit-buttons{
+    position: absolute;
+    bottom: 50px;
+    right: 40px;
+  }
+
+  .client-profile{
+    width: 94%;
+    text-align: left;
+  }

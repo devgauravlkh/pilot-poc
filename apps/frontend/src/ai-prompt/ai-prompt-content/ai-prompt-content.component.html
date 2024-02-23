@@ -1,0 +1,129 @@
+
+<div class="ai-prompt" [formGroup]="promptForm">
+    <h2 mat-dialog-title>Prompt</h2>
+     <mat-form-field appearance="outline" class="text-area" >
+        <mat-label>Textarea</mat-label>
+        <textarea matInput formControlName="textArea" placeholder="Type your message here" [autofocus]="false"></textarea>
+        <mat-error *ngIf="promptForm.controls['textArea'].touched && promptForm.controls['textArea'].hasError('required')">Textarea is Required</mat-error>
+    </mat-form-field>
+    <div style="text-align: left; width: 50%; margin: 25px 55px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Additional Facts</h2>
+            <button mat-raised-button color="primary" [matMenuTriggerFor]="menu" [disabled]="disabledOptions.length === allKeys.length">
+                <mat-icon style="margin-left: 3px;">add</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item
+                        [disabled]="disabledOptions.includes(option)"
+                        *ngFor="let option of allKeys"
+                        (click)="optionSelected(option)">
+                  {{ capitalizeFirstLetter(option) }}
+                </button>
+              </mat-menu>
+        </div>
+        <div *ngFor="let item of keysArray.value;let i = index" style="position: relative;">
+            <div style="display: flex; align-items: baseline;">
+                <label style="text-transform: uppercase;">{{item.name}}</label>
+                <ng-container *ngIf="item.name === 'Life Stage'; else saving">
+                    <div style="position: relative;">
+                        <mat-form-field appearance="outline">
+                            <mat-select (selectionChange)="select(item,$event.value,'lifeStage')" [value]="'Select'">
+                                <mat-option value="Select">Select</mat-option>
+                                <mat-option *ngFor="let option of lifeStage" [value]="option">{{ option }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'"> {{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
+                    </div>
+                </ng-container>
+                <ng-template #saving>
+                    <ng-container *ngIf="item.name === 'Savings'; else occupation">
+                        <div style="position: relative;">
+                            <mat-form-field appearance="outline">
+                                <mat-select (selectionChange)="select(item,$event.value,'savings')" [value]="'Select'">
+                                    <mat-option value="Select">Select</mat-option>
+                                    <mat-option *ngFor="let option of savings" [value]="option">{{ option }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'"> {{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
+                        </div>
+                    </ng-container>
+                </ng-template>
+                <ng-template #occupation>
+                    <ng-container *ngIf="item.name === 'Occupation'; else marital" >
+                        <div style="position: relative;">
+                            <mat-form-field appearance="outline">
+                                <input style="width: 87%; border: none;" matInput type="text" placeholder="" [value]="selectedOccupation">
+                                <mat-icon class="down-icon">arrow_drop_down</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="position: absolute; top:0; left: 0; opacity: 0;">
+                                <mat-select (selectionChange)="select(item,$event.value,'occupation')">
+                                    <mat-option value="Select">Select</mat-option>
+                                    <mat-option *ngFor="let option of names" [value]="option">{{ option }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'"> {{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
+                        </div>
+                    </ng-container>
+                </ng-template>
+                <ng-template #marital>
+                    <ng-container *ngIf="item.name === 'Marital Status'; else parent">
+                        <div style="position: relative;">
+                            <mat-form-field appearance="outline">
+                                <mat-select (selectionChange)="select(item,$event.value,'maritalStatus')" [value]="'Select'">
+                                    <mat-option value="Select">Select</mat-option>
+                                    <mat-option *ngFor="let option of maritalStatus" [value]="option">{{ option }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'"> {{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
+                        </div>
+                    </ng-container>
+                </ng-template>
+                <ng-template #parent>
+                    <ng-container *ngIf="item.name === 'Parents'; else child" >
+                        <div style="position: relative;">
+                            <mat-form-field appearance="outline">
+                                <input style="width: 87%; border: none;" matInput type="text" [value]="selectedParents">
+                                <mat-icon class="down-icon">arrow_drop_down</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="position: absolute; top:0; left: 0; opacity: 0;">
+                                <mat-select (selectionChange)="select(item,$event.value,'parents')" [value]="'Select'">
+                                    <mat-option value="Select">Select</mat-option>
+                                    <mat-option *ngFor="let option of parents" [value]="option">{{ option }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'">{{ capitalizeFirstLetter(item.name) }}</mat-error>
+                        </div>
+                    </ng-container>
+                </ng-template>
+                <ng-template #child>
+                    <ng-container *ngIf="item.name === 'Children';" >
+                        <div style="position: relative;">
+                            <mat-form-field appearance="outline">
+                                <input style="width: 87%; border: none;" matInput type="text" [value]="selectedChildren">
+                                <mat-icon class="down-icon">arrow_drop_down</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" style="position: absolute; top:0; left: 0; opacity: 0;">
+                                <mat-select (selectionChange)="select(item,$event.value,'children')" [value]="'Select'">
+                                    <mat-option value="Select">Select</mat-option>
+                                    <mat-option *ngFor="let option of children" [value]="option">{{ option }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'">{{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
+                        </div>
+                    </ng-container>
+                </ng-template>
+                <div>
+                    <button style="margin-left: 15px;" mat-raised-button color="warn" (click)="removeKey(i,item.name)"><mat-icon style="margin-left: 4px;">delete</mat-icon></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: right;">
+        <button mat-raised-button color="primary" class="submit" (click)="onSubmit()">
+            <div  *ngIf="!loading">Submit</div>
+            <mat-spinner *ngIf="loading" color="warn" diameter="24"></mat-spinner>
+        </button>
+        <button mat-raised-button color="warn" class="submit" style="margin-left: 10px;" (click)="dialogRef.close()">Close</button>
+    </div>
+    <div #clientProfile class="client-profile"></div>
+</div>
