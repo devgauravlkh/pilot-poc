@@ -5,7 +5,6 @@ const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 const app = express();
-console.log(" => process.env.OpenAiAPIKey: ", process.env.OpenAiAPIKey);
 const openai = new OpenAI({ apiKey: process.env.OpenAiAPIKey });
 
 // Parse JSON bodies
@@ -63,23 +62,28 @@ async function generateFinPlanNote(client) {
     2. **Questions**:
     3. **Documents to Bring**:
     `;
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: "You are a helpful assistant designed to output HTML.",
-      },
-      { role: "user", content: content },
-      {
-        role: "user",
-        content: "Note output should be valid HTML only.",
-      },
-      {
-        role: "user",
-        content: "Note I need information presented in a clean HTML format suitable for direct use in web content. Please do not include any markdown or code block characters such as ``` around the HTML content. The information should be structured with proper HTML tags, including doctype, html, head, and body sections. It should be ready to be inserted into a webpage as is.",
-      }
-    ],
-    model: "gpt-3.5-turbo-0125"
-  });
-  return completion?.choices[0];
-}
+    try {
+      const completion = await openai.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful assistant designed to output HTML.",
+          },
+          { role: "user", content: content },
+          {
+            role: "user",
+            content: "Note output should be valid HTML only.",
+          },
+          {
+            role: "user",
+            content: "Note I need information presented in a clean HTML format suitable for direct use in web content. Please do not include any markdown or code block characters such as ``` around the HTML content. The information should be structured with proper HTML tags, including doctype, html, head, and body sections. It should be ready to be inserted into a webpage as is.",
+          }
+        ],
+        model: "gpt-4-0125-preview",
+        temperature: 0.5,
+      });
+      return completion?.choices[0];
+    } catch (error) {
+
+    }
+  }
