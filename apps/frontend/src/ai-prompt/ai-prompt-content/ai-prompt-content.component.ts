@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import {
   MatDialogRef,
   MAT_DIALOG_DATA,
@@ -44,8 +44,10 @@ export class AiPromptContentComponent {
   selectedOccupation: string = 'Select';
   selectedParents: string = 'Select';
   selectedChildren: string = 'Select';
-  disabledOptions: string[] = [];
+  disabledOptions: string[] = ['Children'];
   loading: boolean = false;
+  maritalStatusVal: string = '';
+  facts: FormArray = new FormArray<any>([]);
 
   constructor(
     public dialogRef: MatDialogRef<AiPromptContentComponent>,
@@ -55,11 +57,12 @@ export class AiPromptContentComponent {
     private http: HttpClient
   ) {
     this.createForm();
+    this.updateDisabledOptions();
   }
 
   createForm() {
     this.promptForm = this.fb.group({
-      textArea: ['', Validators.required],
+      // textArea: ['', Validators.required],
       facts: this.fb.array([]),
     });
   }
@@ -87,7 +90,6 @@ export class AiPromptContentComponent {
 
   onSubmit(): void {
     this.loading = true;
-    console.log(' => this.promptForm.value: ', this.promptForm.value);
     this.keysArray.markAllAsTouched();
     this.promptForm.markAllAsTouched();
     if (
@@ -95,13 +97,18 @@ export class AiPromptContentComponent {
       this.keysArray.controls.some((control) => control.value.value === '')
     )
       return;
+    if (this.promptForm.value.facts.length === 0) {
+      this.loading = false;
+      return;
+    }
+    if (this.clientProfile) this.clientProfile.nativeElement.innerHTML = '';
     this.http
       .post('http://localhost:3000/result', this.promptForm.value)
       .subscribe((res: any) => {
-        if (this.clientProfile) {
+        if (this.clientProfile && res['message'].message.content) {
           this.clientProfile.nativeElement.innerHTML =
             res['message'].message.content;
-            this.loading = false;
+          this.loading = false;
         }
       });
   }
@@ -135,6 +142,13 @@ export class AiPromptContentComponent {
         this.selectedChildren = event;
         this.openPopup('children', item, event);
       }
+    } else if (type === 'maritalStatus') {
+      this.maritalStatusVal = event;
+      item.value = event;
+      if (event === 'married') {
+        const index = this.disabledOptions.indexOf('Children');
+        if (index !== -1) this.disabledOptions.splice(index, 1);
+      }
     } else item.value = event;
   }
 
@@ -152,6 +166,21 @@ export class AiPromptContentComponent {
         if (value === 'children') this.selectedChildren = result.value;
       }
     });
+  }
+
+  selectedMaritalStatus(maritalStatus: string): void {
+    this.maritalStatusVal = maritalStatus;
+    this.updateDisabledOptions();
+  }
+
+  updateDisabledOptions() {
+    if (this.maritalStatusVal === 'Married') {
+      const index = this.disabledOptions.indexOf('Children');
+      if (index !== -1) this.disabledOptions.splice(index, 1);
+    } else {
+      if (!this.disabledOptions.includes('Children'))
+        this.disabledOptions.push('Children');
+    }
   }
 }
 

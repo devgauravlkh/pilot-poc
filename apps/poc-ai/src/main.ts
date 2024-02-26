@@ -56,11 +56,12 @@ async function generateFinPlanNote(client) {
   const children = client.facts.find((fact: any) => fact.name === 'Children')?.value;
   const parents = client.facts.find((fact: any) => fact.name === 'Parents')?.value;
   const savings = client.facts.find((fact: any) => fact.name === 'Savings')?.value;
-  const content = `You are a financial planner preparing to meet with a prospective client. The client you are meeting with is a ${occupation}, ${lifestage}, ${maritalStatus} individual with ${children} and ${parents}, and has ${savings}. Your task is to generate a note outlining the client's main concerns, questions to ask during the meeting, and documents to request from the client to bring with them. The concerns, questions, and documents should be tailored to the client's specific profile.
+  const content = `You are a financial planner preparing to meet with a prospective client. The client you are meeting with is a ${occupation ? occupation : ''}, ${lifestage ? lifestage : ''}, ${maritalStatus ? maritalStatus : ''} individual${children ? ` with ${children} children` : ''}${parents ? ` and ${parents} parents` : ''}${savings ? `, and has ${savings}` : ''}. Your task is to generate a note outlining the client's main concerns, questions to ask during the meeting, and documents to request from the client to bring with them. The concerns, questions, and documents should be tailored to the client's specific profile.
     Please generate:
-    1. **Concerns**:
-    2. **Questions**:
-    3. **Documents to Bring**:
+    1. **Client Profile**:
+    2. **Concerns**:
+    3. **Questions**:
+    4. **Documents to Bring**:
     `;
     try {
       const completion = await openai.chat.completions.create({

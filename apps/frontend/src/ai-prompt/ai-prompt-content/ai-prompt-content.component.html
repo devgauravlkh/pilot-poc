@@ -1,12 +1,12 @@
 
 <div class="ai-prompt" [formGroup]="promptForm">
     <h2 mat-dialog-title>Prompt</h2>
-     <mat-form-field appearance="outline" class="text-area" >
+     <!-- <mat-form-field appearance="outline" class="text-area" >
         <mat-label>Textarea</mat-label>
         <textarea matInput formControlName="textArea" placeholder="Type your message here" [autofocus]="false"></textarea>
         <mat-error *ngIf="promptForm.controls['textArea'].touched && promptForm.controls['textArea'].hasError('required')">Textarea is Required</mat-error>
-    </mat-form-field>
-    <div style="text-align: left; width: 50%; margin: 25px 55px;">
+    </mat-form-field> -->
+    <div #factsItem style="text-align: left; width: 50%; margin: 25px 55px; position: relative;" [ngStyle]="{ 'opacity' : loading ? '0.5' : ''}">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <h2>Additional Facts</h2>
             <button mat-raised-button color="primary" [matMenuTriggerFor]="menu" [disabled]="disabledOptions.length === allKeys.length">
@@ -14,12 +14,12 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item
-                        [disabled]="disabledOptions.includes(option)"
+                        [disabled]="(disabledOptions.includes(option))"
                         *ngFor="let option of allKeys"
                         (click)="optionSelected(option)">
                   {{ capitalizeFirstLetter(option) }}
                 </button>
-              </mat-menu>
+            </mat-menu>
         </div>
         <div *ngFor="let item of keysArray.value;let i = index" style="position: relative;">
             <div style="display: flex; align-items: baseline;">
@@ -71,7 +71,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-select (selectionChange)="select(item,$event.value,'maritalStatus')" [value]="'Select'">
                                     <mat-option value="Select">Select</mat-option>
-                                    <mat-option *ngFor="let option of maritalStatus" [value]="option">{{ option }}</mat-option>
+                                    <mat-option *ngFor="let option of maritalStatus" [value]="option" (click)="selectedMaritalStatus(option)">{{ option }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'"> {{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
@@ -91,7 +91,7 @@
                                     <mat-option *ngFor="let option of parents" [value]="option">{{ option }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'">{{ capitalizeFirstLetter(item.name) }}</mat-error>
+                            <mat-error style="position: absolute; bottom: 3px;" *ngIf="!item.value || item.value === 'Select'">{{ capitalizeFirstLetter(item.name) }} is Required</mat-error>
                         </div>
                     </ng-container>
                 </ng-template>
@@ -117,13 +117,16 @@
                 </div>
             </div>
         </div>
+        <div *ngIf="loading" class="loading">
+            <mat-spinner diameter="50"></mat-spinner>
+        </div>
     </div>
     <div style="text-align: right;">
-        <button mat-raised-button color="primary" class="submit" (click)="onSubmit()">
+        <button mat-raised-button color="primary" class="submit" (click)="onSubmit()" [disabled]="promptForm.value.facts.length === 0">
             <div  *ngIf="!loading">Submit</div>
             <mat-spinner *ngIf="loading" color="warn" diameter="24"></mat-spinner>
         </button>
-        <button mat-raised-button color="warn" class="submit" style="margin-left: 10px;" (click)="dialogRef.close()">Close</button>
+        <!-- <button mat-raised-button color="warn" class="submit" style="margin-left: 10px;" (click)="dialogRef.close()">Close</button> -->
     </div>
     <div #clientProfile class="client-profile"></div>
 </div>

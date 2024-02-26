@@ -37,7 +37,7 @@ export class AiPromptComponent {
   openPrompt(): void {
       const dialogRef = this.dialog.open(AiPromptContentComponent, {
         width: '100%',
-        height: 'calc(100vh - 16px)',
+        height: '100vh',
         maxHeight: '100%',
         maxWidth: '100%',
       });
